@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Exo:wght@300;400;700;900&display=swap");
+
+body {
+  margin: 0;
+}
+
+:root {
+  --actionColor: #f18f01;
+  --actionColor-Light: #ffb84d;
+  --accentColor: #a4f7a4;
+  --accentColor-Light: #7eff7a;
+  --fontColor: #2f2e2d;
+  --fontColorContrast: #faf3ec;
+  --fontSizeHud: 18px;
+}
+
+.Game {
+  font-family: "Exo", sans-serif;
+}
+
+.Game__background {
+  position: relative;
+  background-image: url(../assets/images/bgtexture.jpeg);
+  background-repeat: repeat;
+  width: 100vw;
+  height: 100vh;
+  max-width: 800px;
+  max-height: 800px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.Game__container {
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  position: relative;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.Game__startScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.Game__startScreen__title {
+  font-size: 3em;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--fontColorContrast);
+}
+
+.Game__GameScreen__upperHud {
+  display: flex;
+  justify-content: space-around;
+  color: var(--accentColor);
+  font-weight: 700;
+  font-size: var(--fontSizeHud);
+  text-transform: uppercase;
+}
+.Game__GameScreen__upperHud * {
+  margin: 0;
+}
+
+.Game__GameScreen__lowerHud {
+  display: flex;
+  gap: 20px;
+}
+
+.Game__GameScreen__Game {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.Game__GameScreen__WinScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+
+  background-color: rgba(0, 0, 0, 0.75);
+  color: var(--accentColor);
+  text-align: center;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: var(--actionColor);
+  border: none;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--fontColorContrast);
+}
+
+.button__icon {
+  padding: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+.button__icon svg {
+  width: 30px;
+  height: 30px;
+}
+.button__icon svg path {
+  fill: white;
+}
+
+.spider__icon {
+  position: absolute;
+  max-width: 80px;
+  max-height: 80px;
+}
+.spider__icon:hover {
+  filter: invert(25%);
+}
+.spider__web {
+  position: absolute;
+  fill: var(--fontColor);
+  stroke: var(--fontColor);
+  stroke-width: 2;
+  width: 100%;
+  height: 100%;
+}
