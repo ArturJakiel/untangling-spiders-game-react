@@ -81,7 +81,7 @@ const GameScreen = () => {
         </section>
         <GamePlayArea
           forwardedRef={gameArea}
-          TESTwinGame={winGame}
+          winGame={winGame}
           spiderDataArray={spiderLevelData}
         />
         <section className="Game__GameScreen__lowerHud">

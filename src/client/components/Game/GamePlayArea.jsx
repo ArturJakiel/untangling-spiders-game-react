@@ -45,7 +45,7 @@ const collisionDetection = (line1, line2) => {
   return lambda > 0 && lambda < 1 && gamma > 0 && gamma < 1;
 };
 
-const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
+const GamePlayArea = ({ winGame, forwardedRef, spiderDataArray }) => {
   const [connectionCoordinates, setConnectionCoordinates] = useState(
     initValue(spiderDataArray)
   );
@@ -53,6 +53,8 @@ const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
     lineList(spiderDataArray, connectionCoordinates)
   );
   const WebLinesRef = useRef(null);
+  const [noCollision, _setNoCollision] = useState(false);
+  let winInterval;
 
   const UseUpdateConnectionCoordinates = useCallback(
     (updateCords) => {
@@ -63,11 +65,13 @@ const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
 
   // check collision
   useEffect(() => {
+    let noDetectedCollision = true;
     for (let i = 0; i < webLinesList.length; i++) {
       for (let j = 0; j < webLinesList.length; j++) {
         if (i !== j) {
           const intersect = collisionDetection(webLinesList[i], webLinesList[j]);
           if (intersect) {
+            noDetectedCollision = false;
             WebLinesRef.current
               .querySelector(`#${webLinesList[i].id}`)
               .classList.add("spider__web__intersect");
@@ -78,11 +82,25 @@ const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
         }
       }
     }
+    if (noDetectedCollision === true) {
+      _setNoCollision(true);
+    }
   }, [connectionCoordinates, webLinesList]);
 
   useEffect(() => {
     _setWebLinesList(lineList(spiderDataArray, connectionCoordinates));
   }, [connectionCoordinates]);
+
+  useEffect(() => {
+    if (noCollision === true) {
+      winInterval = setInterval(() => {
+        clearInterval(winInterval);
+        winGame();
+      }, 1000);
+    } else {
+      clearInterval(winInterval);
+    }
+  }, [noCollision]);
 
   const WebLines = () => {
     return (
@@ -109,7 +127,7 @@ const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
 
   return (
     <section className="Game__GameScreen__Game" ref={forwardedRef}>
-      <button onClick={TESTwinGame} style={{ position: "absolute", zIndex: "12" }}>
+      <button onClick={winGame} style={{ position: "absolute", zIndex: "12" }}>
         DEBUG: FORCE NEW LEVEL
       </button>
       <div
