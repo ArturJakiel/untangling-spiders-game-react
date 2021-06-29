@@ -6,7 +6,7 @@ import GameTimer from "../components/Game/GameTimer";
 import GamePlayArea from "../components/Game/GamePlayArea";
 
 const generateSpiders = (level, gameArea) => {
-  const spiderCount = level < 4 ? 3 : level;
+  const spiderCount = level < 6 ? 5 : level;
   const ScreenSize = {
     clientHeight: gameArea.current.clientHeight,
     clientWidth: gameArea.current.clientWidth,
@@ -20,14 +20,19 @@ const generateSpiders = (level, gameArea) => {
     const currX = Math.floor(Math.random() * gridX) + 40;
     const currY = Math.floor(Math.random() * gridY) + 100;
 
-    spiderData.push({
-      id: `S${i}`,
-      position: { x: currX, y: currY },
-      connections: [
-        `S${(i - 1 + spiderCount) % spiderCount}`,
-        `S${(i + 1) % spiderCount}`,
-      ],
-    });
+    if (i < Math.floor(spiderCount / 3) + 1) {
+      spiderData.push({
+        id: `S${i}`,
+        position: { x: currX, y: currY },
+        connections: [`S${(i + 2) % spiderCount}`, `S${(i + 3) % spiderCount}`],
+      });
+    } else {
+      spiderData.push({
+        id: `S${i}`,
+        position: { x: currX, y: currY },
+        connections: [`S${(i + 1) % spiderCount}`],
+      });
+    }
   }
 
   return spiderData;

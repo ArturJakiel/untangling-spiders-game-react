@@ -1,61 +1,106 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 import Spider from "../spider/Spider";
 
+const initValue = (arr) => {
+  const myConnectionCoordinates = {};
+  arr.forEach((el) => {
+    myConnectionCoordinates[el.id] = [el.position.x, el.position.y];
+  });
+  return myConnectionCoordinates;
+};
+
 const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
-  const [mousePosition, _setMousePosition] = useState({ x: 0, y: 0 });
-  const [connectionCoordinates, _setConnectionCoordinates] = useState([]);
+  const [connectionCoordinates, setConnectionCoordinates] = useState(
+    initValue(spiderDataArray)
+  );
+  const [webLinesList, _setWebLinesList] = useState([]);
+  const WebLinesRef = useRef(null);
 
+  const UseUpdateConnectionCoordinates = useCallback(
+    (updateCords) => {
+      setConnectionCoordinates({ ...connectionCoordinates, ...updateCords });
+    },
+    [connectionCoordinates]
+  );
+
+  // check collision
   useEffect(() => {
-    const data = {};
-    spiderDataArray.forEach((el) => {
-      data[el.id] = [el.position.x, el.position.y];
-    });
-    _setConnectionCoordinates(data);
-  }, [spiderDataArray]);
+    console.log(WebLinesRef.current);
+    console.log(webLinesList);
+    // Object.entries(connectionCoordinates).map((el) => {
+    //   console.log(el);
+    //   const lineId = el[0];
+    //   const lineX = el[1][0];
+    //   const lineY = el[1][1];
+    //   console.log(lineId, lineX, lineY);
+    //   // if (x1 == x2) {
+    //   //   return !(x3 == x4 && x1 != x3);
+    //   // } else if (x3 == x4) {
+    //   //   return true;
+    //   // } else {
+    //   //   // Both lines are not parallel to the y-axis
+    //   //   m1 = (y1 - y2) / (x1 - x2);
+    //   //   m2 = (y3 - y4) / (x3 - x4);
+    //   //   return m1 != m2;
+    //   // }
+    // });
+  }, [connectionCoordinates]);
 
-  console.log(spiderDataArray);
-  console.log(connectionCoordinates, "asdasd");
+  // _setWebLinesList([
+  //   ...webLinesList,
+  //   {
+  //     id: `${item.id}--${con}`,
+  //     x1: connectionCoordinates[item.id][0] + 40,
+  //     y1: connectionCoordinates[item.id][1] + 40,
+  //     x2: connectionCoordinates[con][0] + 40,
+  //     y2: connectionCoordinates[con][1] + 40,
+  //   },
+  // ]);
+
+  const WebLines = () => {
+    return (
+      <>
+        {spiderDataArray.map((item) =>
+          item.connections.map((con) => (
+            <svg
+              id={`${item.id}--${con}`}
+              className="spider__web"
+              key={`${item.id}_${con}`}
+            >
+              <line
+                x1={connectionCoordinates[item.id][0] + 40}
+                y1={connectionCoordinates[item.id][1] + 40}
+                x2={connectionCoordinates[con][0] + 40}
+                y2={connectionCoordinates[con][1] + 40}
+              />
+            </svg>
+          ))
+        )}
+      </>
+    );
+  };
 
   return (
     <section className="Game__GameScreen__Game" ref={forwardedRef}>
-      <button onClick={TESTwinGame} style={{ position: "absolute" }}>
-        GAME SCREEN
+      <button onClick={TESTwinGame} style={{ position: "absolute", zIndex: "12" }}>
+        DEBUG: FORCE NEW LEVEL
       </button>
-      <p style={{ position: "absolute" }}>
-        {mousePosition.x}
-        {mousePosition.y}
-      </p>
-      <div style={{ width: "100%", height: "100%", position: "relative" }}>
-        {spiderDataArray.map((item) => (
-          <>
-            {console.log(item)}
-            {console.log(connectionCoordinates[item?.connections[0]])}
-            <svg className="spider__web" key={`${item.id}_1`}>
-              <line
-                x1={item.position.x + 40}
-                y1={item.position.y + 40}
-                x2="000"
-                y2="000"
-              />
-            </svg>
-            {/* <svg
-              className="spider__web"
-              key={`${item.id}_2`}
-              connection={item.connection}
-            >
-              <line x1={item.position.x} y1={item.position.y} x2="100" y2="100" />
-            </svg> */}
-          </>
-        ))}
+      <div
+        ref={WebLinesRef}
+        style={{ width: "100%", height: "100%", position: "relative" }}
+      >
+        <WebLines />
       </div>
       {spiderDataArray.map((spidersEl) => (
         <Spider
+          parentRef={forwardedRef}
           key={spidersEl.id}
           id={spidersEl.id}
           position={{ x: spidersEl.position.x, y: spidersEl.position.y }}
           connection={spidersEl.connection}
+          updateConnectionCords={UseUpdateConnectionCoordinates}
         />
       ))}
     </section>
@@ -63,9 +108,3 @@ const GamePlayArea = ({ TESTwinGame, forwardedRef, spiderDataArray }) => {
 };
 
 export default GamePlayArea;
-
-/**
-<svg style="position:absolute;width:100%;height:100%">
-  <line x1="75" y1="75" x2="325" y2="147" style="stroke:black;stroke-width:2" />
-</svg>
- */
