@@ -137,3 +137,7 @@ body {
   width: 100%;
   height: 100%;
 }
+.spider__web__intersect {
+  fill: var(--actionColor);
+  stroke: var(--actionColor);
+}

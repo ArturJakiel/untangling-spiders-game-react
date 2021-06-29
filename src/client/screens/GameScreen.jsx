@@ -47,6 +47,8 @@ const GameScreen = () => {
   const [spidersCount, _setSpidersCount] = useState(3); // TODO: no set yet
   const gameArea = useRef();
   const [spiderLevelData, _setSpiderLevelData] = useState([]);
+  const [, _setRestart] = React.useState();
+  const restart = React.useCallback(() => _setRestart({}), []);
 
   useEffect(() => {
     const spiderArrayData = generateSpiders(level, gameArea);
@@ -91,7 +93,7 @@ const GameScreen = () => {
               />
             </svg>
           </button>
-          <button onClick={StartGameButton.startGame} className="button">
+          <button onClick={restart} className="button">
             Restart
           </button>
         </section>
